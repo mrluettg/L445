@@ -1,0 +1,25 @@
+Files included :
+ja_gsd-ud-train.conllu - the training data for the file. Not written by me.
+createDict.py -  turns the training data into a dictionary. Used to create japanese_dictionary.txt
+japanese_dictionary.txt  - a list of all words that appear in training data. 
+maxmatch.py - tokenizes a sentence using the dictionary. Used five times to create hypothesis.txt
+hypothesis.txt - five sentences tokenized by maxmatch
+createReferences - creates a file of full sentences with spaces from the training data. 
+total_references.txt - all the references (sentences tokenized manually)
+selected_references.txt - select five manually tokenized sentences from total_references.txt to compare to hypothesis.txt
+wer.py word error rate to compare selected_references.txt and hypothesis.txt
+
+Explanation of maxmatch implementation: 
+After reading in the file, the tokenization works recursively. It takes the longest possible word from the initial 
+characters and  returns it with a space after it and also the tokenization of the next part of the sentence. 
+
+To tokenize the sentence:  $echo "[sentence]" | maxmatch.py japanese_dictionary.txt 
+
+The error rate was only 3.7% for the five sentences. 
+"が_、" in the reference was turned into "が、" in the hypothesis." が" in this case is a conjunction meaning "but",
+and the" 、" is puncuation, so there's not really a difference in meaning between the two outside of punctuation. 
+
+The other main difference is that さ_せ_て_くれる in the reference was changed to させ_て_くれる in the hypothesis
+"さ_せ_て_くれる" means "be allowed to do" and is made up of the irregular stem "さ" with the causitive morpheme "せ", the 
+te-form morpheme "て" and the word for "allow"  "くれる." Writing it as させ ignores that those are two different 
+morphemes, and we would probably want them separated. 
